@@ -3,6 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.ImageIcon;
+
 /**
  * Write a description of class Snake here.
  * 
@@ -11,19 +12,30 @@ import javax.swing.ImageIcon;
  */
 public class Snake extends JPanel
 {
-    private String snake = "head.png";
+    private String snake = "images/head.png";
 
-    private int dx;
-    private int dy;
+    private int dx = -1;
+    private int dy = 0;
     private int x;
     private int y;
+    private int fx;
+    private int fy;
     private Image image;
     
     public Snake() {
-        ImageIcon ii = new ImageIcon("images/"+this.getClass().getResource(snake));
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(snake));
         image = ii.getImage();
-        x = 40;
-        y = 60;
+        x = 300;
+        y = 500;
+        
+    }
+    
+    public void setdX(int dx){
+        this.dx = dx;
+    }
+    
+    public void setdY(int dy){
+        this.dy = dy;
     }
     
     public void move() {
@@ -38,9 +50,32 @@ public class Snake extends JPanel
     public int getY() {
         return y;
     }
+    
+     public int getFX() {
+        return fx;
+    }
+
+    public int getFY() {
+        return fy;
+    }
+    
+    public void setFXY(int fx, int fy){
+        this.fx = fx;
+        this.fy = fy;
+    }
 
     public Image getImage() {
         return image;
+    }
+    
+    public Image getImageFood(){
+        ImageIcon ii = new ImageIcon(this.getClass().getResource("images/fries.png"));
+        return ii.getImage();        
+    }
+    
+    public Image getImageFloor(){
+        ImageIcon ii = new ImageIcon(this.getClass().getResource("images/floor.jpg"));
+        return ii.getImage();        
     }
 
 }
