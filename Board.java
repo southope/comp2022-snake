@@ -20,6 +20,9 @@ public class Board extends JPanel implements ActionListener {
     private Snake food;
     private Snake floor;
     private int keyAnterior = KeyEvent.VK_LEFT;
+    private Lista inicio;
+    private Lista list[] = new Lista[100];
+    private int body = 0;
     
     private boolean isPlaying = true;
     private boolean isFood = false;
@@ -44,13 +47,51 @@ public class Board extends JPanel implements ActionListener {
         // add(floor);
         randFood();
         
+        listGenerator();
+        
         timer = new Timer(15, this);
         timer.start();
+    }
+    
+    public void listAllNodes(){
+        Lista a = inicio;
+        System.out.println(inicio.getX());
+        while(a.getProximo() != null){
+            a = a.getProximo();
+            System.out.println(a.getX());
+        }
+    }
+    
+    public void listGenerator(){
+        for (int i = 0; i < list.length ; i++) { 
+         list[i] = new Lista("body"+i); 
+        } 
     }
     
     public void randFood(){
         Random rand = new Random();
         food.setFXY(1 + (int)rand.nextInt(740),1 + (int)rand.nextInt(545));
+    }
+    
+    public void inserirFinal(Lista _node){
+        if(isEmpty()){
+            inicio = _node;
+        }else{
+            Lista aux = inicio;
+            while(aux.getProximo() != null){
+                aux = aux.getProximo();
+            }
+            aux.setProximo(_node);
+        }
+    }
+    
+    
+    public boolean isEmpty(){
+        if(inicio == null){
+            return true;
+        }else{  
+            return false;
+        }
     }
 
     public void paint(Graphics g) {
@@ -113,11 +154,14 @@ public class Board extends JPanel implements ActionListener {
         if (head.getX() >= food.getFX() && head.getX() <= food.getFX()+10 && head.getY() >= food.getFY() && head.getY() <= food.getFY()+10){
             randFood();
             score.addScore(10);
+            inserirFinal(list[body]);
+            body++;
         }
         
       }else{
           if (isPlaying == true){
               isPlaying = false;
+              listAllNodes();
               repaint();
             }
       }
