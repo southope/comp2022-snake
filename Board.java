@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.io.File;
 import javax.swing.ImageIcon;
+import java.awt.geom.AffineTransform;
 
 public class Board extends JPanel implements ActionListener {
 
@@ -21,9 +22,10 @@ public class Board extends JPanel implements ActionListener {
     private Snake floor;
     private int keyAnterior = KeyEvent.VK_LEFT;
     private Lista inicio;
-    private Lista list[] = new Lista[100];
+    private Lista list[];
     private int body = 0;
-    
+    private int ultX = 0;
+    private int ultY = 0;
     private boolean isPlaying = true;
     private boolean isFood = false;
 
@@ -40,31 +42,42 @@ public class Board extends JPanel implements ActionListener {
         score = new Score();
         head = new Snake();
         food = new Snake();
+        list = new Lista[100];
        
         add(food);
         add(score);       
-        add(head);   
+        add(head); 
+       
         // add(floor);
         randFood();
         
         listGenerator();
         
-        timer = new Timer(15, this);
+        timer = new Timer(10, this);
         timer.start();
     }
     
-    public void listAllNodes(){
+    public void moveBody(){
+        if (inicio != null){
         Lista a = inicio;
-        System.out.println(inicio.getX());
+        a.move();
+        System.out.println(a.getX()+" X: "+ a.getBX()+" Y: "+a.getBY());
+        
         while(a.getProximo() != null){
             a = a.getProximo();
-            System.out.println(a.getX());
+            a.move();           
+            System.out.println(a.getX()+" X: "+ a.getBX()+" Y: "+a.getBY());
+            
+            
+            
+            //System.out.println(a.getX());
         }
+       }
     }
     
     public void listGenerator(){
         for (int i = 0; i < list.length ; i++) { 
-         list[i] = new Lista("body"+i); 
+         list[i] = new Lista("body"+i);
         } 
     }
     
@@ -101,10 +114,20 @@ public class Board extends JPanel implements ActionListener {
         
         Graphics2D g2d = (Graphics2D)g;        
          if (isPlaying == true){
+             
              //ImageIcon ii = new ImageIcon(this.getClass().getResource("images/floor.jpg"));
-           
-            //g2d.drawImage(ii.getImage(),0,0,this); 
-            g2d.drawImage(head.getImage(),head.getX(),head.getY(),this); 
+              if (inicio != null){
+              Lista a = inicio;
+              g2d.drawImage(a.getImageBody(),a.getBX(),a.getBY(),this); 
+              while(a.getProximo() != null){
+               a = a.getProximo();
+               g2d.drawImage(a.getImageBody(),a.getBX(),a.getBY(),this);
+               //System.out.println(a.getX());
+             }
+           }  
+           AffineTransform transform = AffineTransform.getScaleInstance(1, -1);  
+           g2d.drawImage(head.getImage(), transform, this);  
+            //g2d.drawImage(head.getImage(),head.getX(),head.getY(),this); 
             g2d.drawImage(food.getImageFood(),food.getFX(),food.getFY(),this); 
             
             }else{               
@@ -147,21 +170,85 @@ public class Board extends JPanel implements ActionListener {
         */
     }
     
+    public void bodyPosition(){
+        
+        if (body == 0){
+         if (keyAnterior == KeyEvent.VK_LEFT ){
+            list[body].setBX(head.getX()+45);
+            list[body].setBY(head.getY());
+         }else if (keyAnterior == KeyEvent.VK_RIGHT ){
+            list[body].setBX(head.getX()-45);
+            list[body].setBY(head.getY());
+         }else if (keyAnterior == KeyEvent.VK_UP ){
+            list[body].setBX(head.getX());
+            list[body].setBY(head.getY()+45);
+         }else if (keyAnterior == KeyEvent.VK_DOWN ){
+            list[body].setBX(head.getX());
+            list[body].setBY(head.getY()-45);
+         }
+       }else{
+         if (keyAnterior == KeyEvent.VK_LEFT ){
+            list[body].setBX(list[body-1].getBX()+20);
+            list[body].setBY(list[body-1].getBY());
+         }else if (keyAnterior == KeyEvent.VK_RIGHT ){
+            list[body].setBX(list[body-1].getBX()-20);
+            list[body].setBY(list[body-1].getBY());
+         }else if (keyAnterior == KeyEvent.VK_UP ){
+            list[body].setBX(list[body-1].getBX());
+            list[body].setBY(list[body-1].getBY()+20);
+         }else if (keyAnterior == KeyEvent.VK_DOWN ){
+            list[body].setBX(list[body-1].getBX());
+            list[body].setBY(list[body-1].getBY()-20);
+         }
+       }
+        
+    }
+    
+    public void turnBody(){
+        if (inicio != null){
+              Lista a = inicio;  
+              if ((a.getBX()== ultX && a.getBY() == ultY)){
+                  a.setdX(head.getdX());
+                  a.setdY(head.getdY());
+                }//else if ((keyAnterior == KeyEvent.VK_UP || keyAnterior == KeyEvent.VK_DOWN ) && a.getBY() != ultY ){
+                  //a.setdX(head.getdX());
+                  //a.setdY(head.getdY());
+                 /*while(a.getProximo() != null){  
+                     Lista b  = a.getProximo();
+                   if ((a.getBX()== b.getBX() && a.getBY() == b.getBY())){
+                    b.setdX(a.getdX());
+                    b.setdY(a.getdY());
+                  }
+                  
+                  a = b;
+                   //System.out.println(a.getX());
+                  }
+                  */
+             // }
+           }     
+        
+    }
+    
     public void actionPerformed(ActionEvent e) {
         if (head.getX() > 0 && head.getY() > 0 && head.getX() < 740 && head.getY() < 545){
-        head.move();        
+        
+        moveBody();    
+        head.move();  
+        turnBody();
         repaint(); 
         if (head.getX() >= food.getFX() && head.getX() <= food.getFX()+10 && head.getY() >= food.getFY() && head.getY() <= food.getFY()+10){
             randFood();
             score.addScore(10);
             inserirFinal(list[body]);
+            add(list[body]);
+            list[body].setdX(head.getdX());
+            list[body].setdY(head.getdY());
+            bodyPosition();
             body++;
         }
-        
       }else{
           if (isPlaying == true){
-              isPlaying = false;
-              listAllNodes();
+              isPlaying = false;              
               repaint();
             }
       }
@@ -183,15 +270,15 @@ public class Board extends JPanel implements ActionListener {
                     
                 case KeyEvent.VK_LEFT:
                     if (keyAnterior != key && keyAnterior != KeyEvent.VK_RIGHT ){
-                    head.setdX(-1);
-                    head.setdY(0);
+                    head.setdX(-1);                    
+                    head.setdY(0);                    
                 }
                     break;
                     
                 case KeyEvent.VK_RIGHT:
                     if (keyAnterior != key && keyAnterior != KeyEvent.VK_LEFT){
                     head.setdX(1);
-                    head.setdY(0);
+                    head.setdY(0);                    
                 }
                     break;
                     
@@ -199,7 +286,7 @@ public class Board extends JPanel implements ActionListener {
                     //score.addScore(10);
                     if (keyAnterior != key && keyAnterior != KeyEvent.VK_DOWN ){
                     head.setdX(0);
-                    head.setdY(-1);
+                    head.setdY(-1);                   
                 }
                     break;
                     
@@ -207,11 +294,14 @@ public class Board extends JPanel implements ActionListener {
                     //score.subScore(-10);
                     if (keyAnterior != key && keyAnterior != KeyEvent.VK_UP ){
                     head.setdX(0);
-                    head.setdY(1);
+                    head.setdY(1);                    
                 }
                     break;
             }
             
+                    ultX = head.getX();
+                    ultY = head.getY();
+                    
             keyAnterior = key;
         }
     }
