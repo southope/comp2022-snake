@@ -17,6 +17,8 @@ public class Lista extends JPanel
     private int by = 0;
     private int dx = 0;
     private int dy = 0;
+    private int cx = 0, cy = 0;
+    private int dir;
 
     /**
      * Constructor for objects of class Node
@@ -25,6 +27,28 @@ public class Lista extends JPanel
     {
 
     }
+    
+    public void setDir(int dir){
+        this.dir = dir;
+    }
+    
+    public int getDir(){
+        return dir;
+    }
+    
+    public void setCXY(int cx, int cy){
+        this.cx = cx;
+        this.cy = cy;
+    }
+    
+    public int getcX(){
+        return cx;
+    }
+    
+    public int getcY(){
+        return cy;
+    }
+    
     
     public void setdX(int dx){
         this.dx = dx;

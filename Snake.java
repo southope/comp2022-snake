@@ -14,7 +14,7 @@ public class Snake extends JPanel
 {
     private String snake = "images/head.png";
 
-    private int dx = 0;
+    private int dx = -1;
     private int dy = 0;
     private int x;
     private int y;
