@@ -2,6 +2,7 @@ import java.awt.Image;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.ImageIcon;
+import java.awt.event.KeyEvent;
 /**
  * Write a description of class Node here.
  * 
@@ -104,7 +105,15 @@ public class Lista extends JPanel
     }
     
     public Image getImageBody(){
-        ImageIcon ii = new ImageIcon(this.getClass().getResource("images/body.png"));
+        String body = "images/body.png";
+        if (getDir() == KeyEvent.VK_LEFT || getDir() == KeyEvent.VK_RIGHT){
+            body = "images/body.png";
+        }else if (getDir() == KeyEvent.VK_UP) {
+            body = "images/bodyUP.png";
+        }else if ( getDir() == KeyEvent.VK_DOWN){
+             body = "images/bodyDOWN.png";
+        }
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(body));
         return ii.getImage();        
     }
     

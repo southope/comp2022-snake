@@ -14,18 +14,19 @@ public class Snake extends JPanel
 {
     private String snake = "images/head.png";
 
-    private int dx = -1;
+    private int dx = -20;
     private int dy = 0;
     private int x;
     private int y;
     private int fx;
     private int fy;
+    private int dir = 37;
     private Image image;
     
     public Snake() {
         ImageIcon ii = new ImageIcon(this.getClass().getResource(snake));
         image = ii.getImage();
-        x = 300;
+        x = 720;
         y = 500;
         
     }
@@ -47,8 +48,10 @@ public class Snake extends JPanel
     }
     
     public void move() {
+          
         x += dx;
         y += dy;
+        
     }
 
     public int getX() {
@@ -71,9 +74,29 @@ public class Snake extends JPanel
         this.fx = fx;
         this.fy = fy;
     }
+    
+    public int getDir() {
+        return dir;
+    }
+    
+    public void setDir(int dir){
+        this.dir = dir;       
+    }
 
     public Image getImage() {
-        return image;
+        
+        if (getDir() == KeyEvent.VK_LEFT){
+            snake = "images/head.png";
+        }else if (getDir() == KeyEvent.VK_RIGHT){
+            snake = "images/headRight.png";
+        }else if (getDir() == KeyEvent.VK_UP){
+            snake = "images/headUp.png";
+        }else if (getDir() == KeyEvent.VK_DOWN){
+            snake = "images/headDown.png";
+        }
+        ImageIcon ii = new ImageIcon(this.getClass().getResource(snake));
+        return ii.getImage();
+        
     }
     
     public Image getImageFood(){
