@@ -30,6 +30,7 @@ public class Board extends JPanel implements ActionListener {
     //private int ultY = 0;
     private boolean isPlaying = false;
     private boolean isFood = false;
+    private String frase;
     
 
     private Font font;
@@ -72,6 +73,8 @@ public class Board extends JPanel implements ActionListener {
         add(floor);
         randFood();
         velocidade = 100;
+        inicio = null;
+        frase = "Pressione ENTER para iniciar o jogo! "
         listGenerator(); 
         
        }
@@ -155,7 +158,7 @@ public class Board extends JPanel implements ActionListener {
             
             g2d.drawImage(food.getImageFood(),food.getFX(),food.getFY(),this); 
               
-            }else{               
+            }else if (frase.Equals("Pressione ENTER para iniciar o jogo! ")){               
             try{
                 File file = new File("fonts/VT323-Regular.ttf");
                 font = Font.createFont(Font.TRUETYPE_FONT, file);
