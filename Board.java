@@ -53,7 +53,7 @@ public class Board extends JPanel implements ActionListener {
         randFood();
         
 
-               
+               frase = "Pressione ENTER para iniciar o jogo! ";
         timer = new Timer(velocidade, this);
         timer.start();
     }
@@ -74,7 +74,7 @@ public class Board extends JPanel implements ActionListener {
         randFood();
         velocidade = 100;
         inicio = null;
-        frase = "Pressione ENTER para iniciar o jogo! "
+        frase = "Game Over";
         listGenerator(); 
         
        }
@@ -141,6 +141,24 @@ public class Board extends JPanel implements ActionListener {
     public void paint(Graphics g) {
          super.paint(g);
          Graphics2D g2d = (Graphics2D)g; 
+         if (frase.equals("Pressione ENTER para iniciar o jogo! ") || frase.equals("        Game Over  Pressione ENTER para reiniciar! ")){
+             try{
+                File file = new File("fonts/VT323-Regular.ttf");
+                font = Font.createFont(Font.TRUETYPE_FONT, file);
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(font);
+                font = font.deriveFont(Font.PLAIN,36);
+                g2d.setFont(font);
+            }catch (Exception e){
+                 System.out.println(e.toString());
+            }   
+            g2d.drawImage(floor.getImageFloor(),0,2,this);
+            if (frase.equals("        Game Over  Pressione ENTER para iniciar o jogo! ")){
+                g2d.drawString(frase, 10, 250);
+            }else{
+             g2d.drawString(frase, 150, 250);
+           }
+            }
          if (isPlaying == true){
              g2d.drawImage(floor.getImageFloor(),0,2,this);
              score.paintComponent(g); 
@@ -158,7 +176,7 @@ public class Board extends JPanel implements ActionListener {
             
             g2d.drawImage(food.getImageFood(),food.getFX(),food.getFY(),this); 
               
-            }else if (frase.Equals("Pressione ENTER para iniciar o jogo! ")){               
+            }else {               
             try{
                 File file = new File("fonts/VT323-Regular.ttf");
                 font = Font.createFont(Font.TRUETYPE_FONT, file);
@@ -170,7 +188,7 @@ public class Board extends JPanel implements ActionListener {
                  System.out.println(e.toString());
             }   
             g2d.drawImage(floor.getImageFloor(),0,2,this);
-           g2d.drawString("Game Over", 350, 250);
+           g2d.drawString(frase, 10, 250);
             }
        
         
@@ -258,6 +276,7 @@ public class Board extends JPanel implements ActionListener {
           if (isPlaying == true){
               isPlaying = false;              
               repaint();
+              frase = "        Game Over  Pressione ENTER para reiniciar! ";
             }
       }
       
